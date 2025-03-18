@@ -17,16 +17,17 @@ document.addEventListener("DOMContentLoaded", function () {
         appendMessage("You", message);
         userInput.value = "";
 
-        fetch("https://your-azure-server.com/chatbot", {
+        fetch("http://4.206.136.159:8000/chatbot", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ message })
+            body: JSON.stringify({ message: userInput.value })
         })
             .then(response => response.json())
             .then(data => appendMessage("Bot", data.response))
             .catch(error => appendMessage("Bot", "Error: Unable to connect to server"));
+
     }
 
     function appendMessage(sender, message) {
