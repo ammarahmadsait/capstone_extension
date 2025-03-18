@@ -1,0 +1,34 @@
+{
+    "manifest_version": 3,
+    "name": "Mr. White",
+    "version": "1.0",
+    "description": "A Chrome extension chatbot for cybersecurity questions, connected to an Ollama server hosted on Azure.",
+    "permissions": [ "identity", "storage" ],
+    "host_permissions": [ "https://your-azure-server.com/*" ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icon.png",
+            "48": "icon.png",
+            "128": "icon.png"
+        }
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "oauth2": {
+        "client_id": "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+        "scopes": [
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email"
+        ]
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [ "popup.html", "styles.css", "icon.png" ],
+            "matches": [ "<all_urls>" ]
+        }
+    ]
+}
+
+
