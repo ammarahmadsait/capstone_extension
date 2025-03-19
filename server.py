@@ -1,25 +1,24 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import ollama
 
 app = FastAPI()
 
-# Define the request structure
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["chrome-extension://dpmpmfkjndabndkcofceepbjkbjdgale"],  # Allow your Chrome extension
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
+
 class ChatRequest(BaseModel):
-    message: str  # Expecting a JSON object with a "message" field
+    message: str
 
 @app.post("/chatbot")
 async def chatbot(request: ChatRequest):
-    try:
-        # Process the user's message using the Ollama AI model
-        response = ollama.chat(model="llama3", messages=[{"role": "user", "content": request.message}])
-
-        # Extract the chatbot's response
-        chatbot_reply = response['message']['content']
-        
-        return {"response": chatbot_reply}  # Send response back to the extension
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return {"response": f"You said: {request.message}"}  # Echo user input
 
 if __name__ == "__main__":
     import uvicorn

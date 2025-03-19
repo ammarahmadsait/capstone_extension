@@ -4,13 +4,13 @@
     "version": "1.0",
     "description": "A Chrome extension chatbot for cybersecurity questions, connected to an Ollama server hosted on Azure.",
     "permissions": [ "identity", "storage" ],
-    "host_permissions": ["http://4.206.136.159:8000/*"],
+    "host_permissions": [ "http://192.168.1.90:8000/*" ], 
     "action": {
         "default_popup": "popup.html",
         "default_icon": {
-            "16": "example16.png",
-            "48": "example48.png",
-            "128": "example128.png"
+            "16": "icons/example16.png",
+            "48": "icons/example48.png",
+            "128": "icons/example128.png"
         }
     },
     "background": {
