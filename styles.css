@@ -27,11 +27,14 @@ body {
 }
 
 #user-input {
-    width: calc(100% - 60px);
+    width: calc(100% - 20px);
     padding: 5px;
+    margin-top: 5px;
 }
 
-#send-btn {
+#send-btn, #new-chat-btn {
+    width: 100%;
     padding: 5px;
+    margin-top: 5px;
     cursor: pointer;
 }
