@@ -1,12 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("Popup loaded!");
-
     const chatBox = document.getElementById("chat-box");
     const userInput = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
-    const newChatBtn = document.getElementById("new-chat-btn");
+    const newChatBtn = document.getElementById("new-chat-btn"); // Button to reset chat
 
-   
+    // Load chat history when popup opens
     chrome.storage.local.get("chatHistory", function (data) {
         if (data.chatHistory) {
             data.chatHistory.forEach(({ sender, message }) => appendMessage(sender, message));
@@ -21,8 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     newChatBtn.addEventListener("click", function () {
-        chatBox.innerHTML = ""; // Clear the chat box
-        chrome.storage.local.set({ "chatHistory": [] }); // Reset chat history in storage
+        chatBox.innerHTML = ""; // Clear UI chat
+        chrome.storage.local.set({ "chatHistory": [] }); // Reset stored chat
     });
 
     function sendMessage() {
@@ -30,32 +28,20 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!message) return;
 
         appendMessage("You", message);
+        saveChatHistory("You", message);
         userInput.value = "";
 
-        console.log("Sending request to server:", message);
-
-        fetch("http://192.168.1.90:8000/chatbot", {
+        fetch("http://192.168.1.90:8000/chatbot", {  // Ensure VM IP is correct
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message })
         })
             .then(response => response.json())
             .then(data => {
-                console.log("Received response:", data);
                 appendMessage("Mr. White", data.response);
-
-                // Save chat history
-                chrome.storage.local.get("chatHistory", function (storedData) {
-                    let chatHistory = storedData.chatHistory || [];
-                    chatHistory.push({ sender: "You", message });
-                    chatHistory.push({ sender: "Mr. White", message: data.response });
-                    chrome.storage.local.set({ "chatHistory": chatHistory });
-                });
+                saveChatHistory("Mr. White", data.response);
             })
-            .catch(error => {
-                console.error("Error:", error);
-                appendMessage("Mr. White", "Error: Unable to connect to server");
-            });
+            .catch(error => appendMessage("Mr. White", "Error: Unable to connect to server"));
     }
 
     function appendMessage(sender, message) {
@@ -65,4 +51,19 @@ document.addEventListener("DOMContentLoaded", function () {
         chatBox.appendChild(messageElement);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
+
+    function saveChatHistory(sender, message) {
+        chrome.storage.local.get("chatHistory", function (data) {
+            let chatHistory = data.chatHistory || [];
+            chatHistory.push({ sender, message });
+
+            // Limit history to last 100 messages
+            if (chatHistory.length > 100) {
+                chatHistory.shift();
+            }
+
+            chrome.storage.local.set({ "chatHistory": chatHistory });
+        });
+    }
 });
+
