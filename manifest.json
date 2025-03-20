@@ -8,9 +8,9 @@
     "action": {
         "default_popup": "popup.html",
         "default_icon": {
-            "16": "icons/example16.png",
-            "48": "icons/example48.png",
-            "128": "icons/example128.png"
+            "16": "icons/mrwhite16.png",
+            "48": "icons/mrwhite48.png",
+            "128": "icons/mrwhite128.png"
         }
     },
     "background": {
