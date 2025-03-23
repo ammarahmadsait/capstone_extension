@@ -8,7 +8,7 @@ function setupChat(chatBox, userInput, sendBtn, newChatBtn) {
         }
     });
 
-    sendBtn.addEventListener("click", () => sendMessage());
+    sendBtn.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
             sendMessage();
@@ -28,6 +28,16 @@ function setupChat(chatBox, userInput, sendBtn, newChatBtn) {
         saveChatHistory("You", message);
         userInput.value = "";
 
+        // Show "thinking" message
+        const thinkingStatus = document.getElementById("thinking-status");
+        thinkingStatus.style.display = "block";
+        thinkingStatus.textContent = "Mr. White is thinking...";
+
+        // Disable input and buttons
+        userInput.disabled = true;
+        sendBtn.disabled = true;
+        newChatBtn.disabled = true;
+
         fetch("http://192.168.1.90:8000/chatbot", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -38,9 +48,17 @@ function setupChat(chatBox, userInput, sendBtn, newChatBtn) {
                 appendMessage(chatBox, "Mr. White", data.response);
                 saveChatHistory("Mr. White", data.response);
             })
-            .catch(() =>
-                appendMessage(chatBox, "Mr. White", "Error: Unable to connect to server")
-            );
+            .catch(() => {
+                appendMessage(chatBox, "Mr. White", "Error: Unable to connect to server");
+            })
+            .finally(() => {
+                // Hide "thinking", re-enable input
+                thinkingStatus.style.display = "none";
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                newChatBtn.disabled = false;
+                userInput.focus();
+            });
     }
 
     function appendMessage(container, sender, message) {
@@ -64,4 +82,3 @@ function setupChat(chatBox, userInput, sendBtn, newChatBtn) {
         });
     }
 }
-
