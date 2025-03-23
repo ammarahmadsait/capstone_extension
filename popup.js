@@ -65,5 +65,14 @@ document.addEventListener("DOMContentLoaded", function () {
             chrome.storage.local.set({ "chatHistory": chatHistory });
         });
     }
+
+    document.getElementById("fullscreen-btn").addEventListener("click", () => {
+        chrome.tabs.create({ url: chrome.runtime.getURL("fullscreen.html") });
+    });
+
+    document.getElementById("minimize-btn").addEventListener("click", () => {
+        window.close(); // closes the popup
+    });
+
 });
 

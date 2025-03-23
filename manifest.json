@@ -25,7 +25,7 @@
     },
     "web_accessible_resources": [
         {
-            "resources": [ "popup.html", "styles.css", "icon.png" ],
+            "resources": [ "fullscreen.html" "popup.html", "styles.css", "icon.png" ],
             "matches": [ "<all_urls>" ]
         }
     ]
